@@ -28,9 +28,6 @@ class Loader extends PluginBase{
 	/** @var instance */
 	private static $instance;
 	
-	/** @var inv */
-	private $inv = []; 
-	
 	public function onLoad(){
 	    self::$instance = $this;
 	    BlockFactory::registerBlock(new EnderChest(), true);
@@ -44,11 +41,7 @@ class Loader extends PluginBase{
 	 */
 	
 	public function getInventory(Player $player): EnderChestInventory{
-	    if(isset($this->inv[$player->getName()])){
-		   return $this->inv[$player->getName()];
-		 }
-	    $this->inv[$player->getName()] = new EnderChestInventory($player);
-	return $this->getInventory($player);
+	     return new EnderChestInventory($player);
 	}
 	
 	/**
