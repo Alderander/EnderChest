@@ -6,6 +6,8 @@ use pocketmine\inventory\FakeBlockMenu;
 
 use pocketmine\level\Position;
 
+use pocketmine\mcpe\protocol\BlockEventPacket;
+
 use pocketmine\inventory\ContainerInventory;
 
 /*
@@ -96,11 +98,40 @@ class EnderChestInventory extends ContainerInventory{
 	
 	/**
 	 * @void onClose
-	 * @param Player $player
 	 */
 	
 	public function onClose(Player $player): void{
 	    parent::onClose($player);
 	    DataBase::saveInventoryContents($player, $this);
+	    if(count($this->getViewers()) == 1 and ($level = $this->getHolder()->getLevel()) instanceof Level){
+			$this->broadcastBlockEventPacket($this->getHolder(), false);
+			$level->broadcastLevelSoundEvent($this->getHolder()->add(0.5, 0.5, 0.5), 66);
+		}
+	}
+	
+	/**
+	 * @void onOpen
+	 */
+
+	public function onOpen(Player $who): void{
+		parent::onOpen($who);
+		if(count($this->getViewers()) == 1 and ($level = $this->getHolder()->getLevel()) instanceof Level){
+			$this->broadcastBlockEventPacket($this->getHolder(), true);
+			$level->broadcastLevelSoundEvent($this->getHolder()->add(0.5, 0.5, 0.5), 65);
+		}
+	}
+	
+	/**
+	 * @void broadcastBlockEventPacket
+	 */
+
+	protected function broadcastBlockEventPacket(Vector3 $vector, bool $isOpen): void{
+		$pk = new BlockEventPacket();
+		$pk->x = (Int) $vector->x;
+		$pk->y = (Int) $vector->y;
+		$pk->z = (Int) $vector->z;
+		$pk->eventType = 1;
+		$pk->eventData = $isOpen ? 1: 0;
+		$this->getHolder()->getLevel()->addChunkPacket($this->getHolder()->getX() >> 4, $this->getHolder()->getZ() >> 4, $pk);
 	}
 }
