@@ -5,6 +5,7 @@ use pocketmine\Player;
 use pocketmine\inventory\FakeBlockMenu;
 
 use pocketmine\level\Position;
+use pocketmine\math\Vector3;
 
 use pocketmine\network\mcpe\protocol\BlockEventPacket;
 
@@ -72,7 +73,7 @@ class EnderChestInventory extends ContainerInventory{
 	 */
 	
 	public function getName(): string{
-	    return "Ender Chest Inventory";
+	    return "Ender Chest";
 	}
 	
 	/**
@@ -101,11 +102,11 @@ class EnderChestInventory extends ContainerInventory{
 	 */
 	
 	public function onClose(Player $player): void{
-	    parent::onClose($player);
+		 parent::onClose($player);
 	    DataBase::saveInventoryContents($player, $this);
-	    if(count($this->getViewers()) == 1 and ($level = $this->getHolder()->getLevel()) instanceof Level){
+	    if(count($this->getViewers()) <= 1){
 			$this->broadcastBlockEventPacket($this->getHolder(), false);
-			$level->broadcastLevelSoundEvent($this->getHolder()->add(0.5, 0.5, 0.5), 66);
+			$this->getHolder()->getLevel()->broadcastLevelSoundEvent($this->getHolder()->add(0.5, 0.5, 0.5), 66);
 		}
 	}
 	
@@ -113,11 +114,11 @@ class EnderChestInventory extends ContainerInventory{
 	 * @void onOpen
 	 */
 
-	public function onOpen(Player $who): void{
-		parent::onOpen($who);
-		if(count($this->getViewers()) == 1 and ($level = $this->getHolder()->getLevel()) instanceof Level){
+	public function onOpen(Player $player): void{
+		parent::onOpen($player);
+		if(count($this->getViewers()) == 1){
 			$this->broadcastBlockEventPacket($this->getHolder(), true);
-			$level->broadcastLevelSoundEvent($this->getHolder()->add(0.5, 0.5, 0.5), 65);
+			$this->getHolder()->getLevel()->broadcastLevelSoundEvent($this->getHolder()->add(0.5, 0.5, 0.5), 65);
 		}
 	}
 	
@@ -125,13 +126,13 @@ class EnderChestInventory extends ContainerInventory{
 	 * @void broadcastBlockEventPacket
 	 */
 
-	protected function broadcastBlockEventPacket(Vector3 $vector, bool $isOpen): void{
+	public function broadcastBlockEventPacket(Vector3 $vector, bool $setOpen): void{
 		$pk = new BlockEventPacket();
 		$pk->x = (Int) $vector->x;
 		$pk->y = (Int) $vector->y;
 		$pk->z = (Int) $vector->z;
 		$pk->eventType = 1;
-		$pk->eventData = $isOpen ? 1: 0;
+		$pk->eventData = $setOpen ? 1: 0;
 		$this->getHolder()->getLevel()->addChunkPacket($this->getHolder()->getX() >> 4, $this->getHolder()->getZ() >> 4, $pk);
 	}
 }
