@@ -6,7 +6,7 @@ use pocketmine\inventory\FakeBlockMenu;
 
 use pocketmine\level\Position;
 
-use pocketmine\mcpe\protocol\BlockEventPacket;
+use pocketmine\network\mcpe\protocol\BlockEventPacket;
 
 use pocketmine\inventory\ContainerInventory;
 
