@@ -10,8 +10,7 @@ The chest / Inventory data is saved at players/chestdata, it's in serialized for
 
 # ToDo
 - [ ] Add MySQL and SQL support
-- [ ] Fix EnderChest open and close animation
-- [ ] Fix bugs if found so
+- [ ] Fix chest not showing up after restart (Bug or packet error maybe?)
 
 # Support
 Twitter: @TheAz928
