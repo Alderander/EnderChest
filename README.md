@@ -1,7 +1,7 @@
 # Enderchest
 EnderChest implemention in PocketMine-MP (PMMP)!
 [![](https://poggit.pmmp.io/shield.approved/EnderChest)](https://poggit.pmmp.io/p/EnderChest)
-
+[![HitCount](http://hits.dwyl.io/TheAz928/EnderChest.svg)](http://hits.dwyl.io/TheAz928/EnderChest)
 # How to install
 Drop the phar file from poggit to your server's plugins folder, reload  or restart and you're done!
 
